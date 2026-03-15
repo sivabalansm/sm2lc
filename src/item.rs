@@ -1,5 +1,6 @@
-const DEFAULT_EF : f32 = 2.5;
+pub const DEFAULT_EF : f32 = 2.5;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct Item {
     name : String,
     description: String,
@@ -14,8 +15,16 @@ impl Item {
         Item { name, description, ef: DEFAULT_EF, order: 0, repetitions: 0 }
     }
 
-    pub fn get_order(&self) -> i32 {
+    pub fn order(&self) -> i32 {
         self.order
+    }
+
+    pub fn repetitions(&self) -> i32 {
+        self.repetitions
+    }
+
+    pub fn ef(&self) -> f32 {
+        self.ef
     }
 
     fn update_order_from_repetitions(&mut self, repetitions : i32) -> f32 {
