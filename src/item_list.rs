@@ -1,4 +1,5 @@
 use crate::item;
+use crate::db;
 
 struct ItemList {
     items: Vec<item::Item>, 
@@ -7,6 +8,10 @@ struct ItemList {
 impl ItemList {
     pub fn new() -> Self {
         ItemList { items: Vec::new() }
+    }
+
+    pub fn from(db_source : db::DB) -> Self {
+        ItemList { items: Vec::new() }// db_source.get_all_items()
     }
 
     pub fn remove_top(&mut self) -> item::Item {
