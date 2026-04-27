@@ -1,9 +1,10 @@
 pub const DEFAULT_EF : f32 = 2.5;
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Item {
     name : String,
-    description: String,
+    link: String,
     ef : f32,
     order : i32,
     repetitions: i32,
@@ -11,8 +12,12 @@ pub struct Item {
 
 
 impl Item {
-    pub fn new(name : String, description : String) -> Self {
-        Item { name, description, ef: DEFAULT_EF, order: 0, repetitions: 0 }
+    pub fn new(name : String, link : String) -> Self {
+        Item { name, link, ef: DEFAULT_EF, order: 0, repetitions: 0 }
+    }
+
+    pub fn name(&self) -> String {
+        self.name.clone()
     }
 
     pub fn order(&self) -> i32 {
@@ -59,9 +64,9 @@ mod test {
 
     #[test]
     fn item_fields() {
-        let item = Item::new(String::from("Test item"), String::from("Test description"));
+        let item = Item::new(String::from("Test item"), String::from("Test link"));
         assert_eq!(item.name, "Test item");
-        assert_eq!(item.description, "Test description");
+        assert_eq!(item.link, "Test link");
         assert_eq!(item.order, 0);
         assert_eq!(item.repetitions, 0);
         assert_eq!(item.ef, DEFAULT_EF);
@@ -69,14 +74,14 @@ mod test {
     
     #[test]
     fn update_repitions() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(4.0);
         assert_eq!(item.repetitions, 1);
     }
     
     #[test]
     fn check_new_order_base_case() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(4.0);
         assert_eq!(item.order, 1);
         item.assess_quality(4.0);
@@ -85,7 +90,7 @@ mod test {
     
     #[test]
     fn check_new_order_ef_mut() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(4.0);
         item.assess_quality(4.0);
         item.assess_quality(4.0);
@@ -94,14 +99,14 @@ mod test {
     
     #[test]
     fn check_ef_after_5_assess_quality() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(5.0);
         assert_eq!(item.ef, DEFAULT_EF + 0.1);
     }
     
     #[test]
     fn check_ef_after_4_assess_quality() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(4.0);
         item.assess_quality(4.0);
         item.assess_quality(4.0);
@@ -110,21 +115,21 @@ mod test {
     
     #[test]
     fn check_ef_after_3_assess_quality() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(3.0);
         assert_eq!(item.ef, DEFAULT_EF - 0.14);
     }
     
     #[test]
     fn check_ef_after_2_assess_quality() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(2.0);
         assert_eq!(item.ef, DEFAULT_EF - 0.32);
     }
     
     #[test]
     fn check_ef_after_1_assess_quality() {
-        let mut item = Item::new(String::from("Test item"), String::from("Test description"));
+        let mut item = Item::new(String::from("Test item"), String::from("Test link"));
         item.assess_quality(1.0);
         assert_eq!(item.ef, DEFAULT_EF - 0.54);
     }
