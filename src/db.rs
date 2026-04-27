@@ -1,8 +1,7 @@
 use crate::item;
 use postgrest::Postgrest;
+use std::env;
 
-const SUPABASE_ENDPOINT : &str = "";
-const API_KEY : &str = "";
 
 pub struct DB {
     client: Postgrest,
@@ -10,7 +9,9 @@ pub struct DB {
 
 impl DB {
     pub fn new() -> Self {
-        DB { client: Postgrest::new(SUPABASE_ENDPOINT).insert_header("apikey", API_KEY) }
+        let supabase_endpoint : String = env::var("SUPABASE_ENDPOINT").unwrap();
+        let api_key : String = env::var("API_KEY").unwrap();
+        DB { client: Postgrest::new(supabase_endpoint).insert_header("apikey", api_key) }
     }
 
     pub async fn get_all_items(&self) -> String {
@@ -22,4 +23,13 @@ impl DB {
     }
 
 }
+#[cfg(test)]
+mod test {
+    use super::*;
 
+    #[test]
+    fn item_fields() {
+        assert_eq!(item.ef, DEFAULT_EF);
+    }
+    
+} 
