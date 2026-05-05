@@ -1,0 +1,7 @@
+- [x] get all items from db
+- [x] add new items to db
+- [x] db item object and be able to update that individual item
+- [ ] load db items to extension, display everything
+- [ ] go to db item selected from list of items
+- [ ] assess quality of item selected from list of items
+- [ ] add new item from extension

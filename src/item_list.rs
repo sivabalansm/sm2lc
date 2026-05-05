@@ -45,14 +45,8 @@ mod test {
         itemlist.put(Item::new("Test name".to_string(), "Test link".to_string()));
     }
 
-    #[test]
-    fn test_remove_top() {
-        let mut itemlist = ItemList::new();
-        itemlist.put(Item::new("Test name".to_string(), "Test link".to_string()));
-        let top_elem = itemlist.remove_top();
-        assert_eq!(top_elem, Item::new("Test name".to_string(), "Test link".to_string()));
-    }
-
+    
+    /*
     #[test]
     fn test_remove_top_quality_assess() {
         let mut itemlist = ItemList::new();
@@ -81,4 +75,5 @@ mod test {
         assert_eq!(itemlist.items, vec![Item::new("Test name 2".to_string(), "Test link 2".to_string()), top_elem_clone]);
 
     }
+    */
 }

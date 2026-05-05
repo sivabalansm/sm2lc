@@ -2,26 +2,6 @@ use crate::item::Item;
 use postgrest::Postgrest;
 use std::env;
 
-pub struct DBItem {
-    item: Item,
-    client: Postgrest,
-}
-
-impl DBItem {
-    pub fn from(item : Item, client : Postgrest) -> Self {
-        DBItem { item, client }
-    }
-
-    pub fn assess_quality(&mut self, q : f32) {
-        self.item.assess_quality(q);
-        self.client
-            .from("sm2_lc_items")
-            .eq("name", self.item.name())
-            .update(serde_json::to_string(&self.item).unwrap())
-            .select("*");
-    }
-}
-
 pub struct DB {
     client: Postgrest,
 }
@@ -40,6 +20,22 @@ impl DB {
             .await.unwrap();
         res.json::<Vec::<Item>>().await
     }
+
+    pub async fn put(&self, item : &Item) {
+        let res = self.client.from("sm2_lc_items")
+            .insert(serde_json::to_string(item).unwrap())
+            .execute()
+            .await
+            .unwrap();
+    }
+    pub async fn update(&self, item : &Item) {
+        let res = self.client.from("sm2_lc_items")
+            .eq("name", item.name())
+            .update(serde_json::to_string(item).unwrap())
+            .select("*")
+            .execute()
+            .await.unwrap();
+    }
 }
 
 #[cfg(test)]
@@ -51,5 +47,25 @@ mod test {
         let items = db.get_all_items().await.unwrap();
         assert_ne!(items.len(), 0);
     }
-    
+
+    #[tokio::test]
+    async fn add_item() {
+        let db = DB::new();
+        let item = Item::new("Add item test".to_string(), "https://example.com/addingitem".to_string());
+        db.put(&item).await;
+        let items = db.get_all_items().await.unwrap();
+        println!("{:?}", items);
+        assert!(items.contains(&item));
+    }
+
+    #[tokio::test]
+    async fn update_item() {
+        let db = DB::new();
+        let mut item = Item::new("Add item to update".to_string(), "https://example.com/addingitem".to_string());
+        db.put(&item).await;
+        item.assess_quality(5.0);
+        db.update(&item).await;
+        let items = db.get_all_items().await.unwrap();
+        assert!(items.contains(&item));
+    }
 } 
