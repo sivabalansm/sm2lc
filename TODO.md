@@ -2,4 +2,6 @@
 - [x] add new items to db
 - [x] db item object and be able to update that individual item
 - [x] rest api compatibility
+- [ ] switch from ::env to dotenv for auto read
 - [ ] all db operations rest api compatible
+- [ ] 
